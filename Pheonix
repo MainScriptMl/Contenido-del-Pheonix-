@@ -1667,7 +1667,8 @@ end)
 local switch = Rebirth:AddSwitch("Hide All Frames", function(state)
     if state then
    loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Particulas/refs/heads/main/Particulas"))()
-
+  end
+end)
 Rebirth:AddLabel("---Solo gente con 7-8 packs---")
 
 local switch = Rebirth:AddSwitch("Fast Rebirths", function(state)
