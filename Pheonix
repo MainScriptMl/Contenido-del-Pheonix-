@@ -1933,12 +1933,12 @@ local function createMyLabels()
         local evilKarmaGained = evilKarmaStat.Value - initialEvilKarma
         local goodKarmaGained = goodKarmaStat.Value - initialGoodKarma
 
-        labels.StrengthGainedLabel.Text = "Amount of strength gained in this server: " .. abbreviateNumber(strengthGained)
-        labels.DurabilityGainedLabel.Text = "Amount of durability gained in this server: " .. abbreviateNumber(durabilityGained)
-        labels.AgilityGainedLabel.Text = "Amount of agility gained in this server: " .. abbreviateNumber(agilityGained)
-        labels.KillsGainedLabel.Text = "Amount of kills gained in this server: " .. abbreviateNumber(killsGained)
-        labels.EvilKarmaGainedLabel.Text = "Amount of Evil Karma gained in this server: " .. abbreviateNumber(evilKarmaGained)
-        labels.GoodKarmaGainedLabel.Text = "Amount of Good Karma gained in this server: " .. abbreviateNumber(goodKarmaGained)
+        labels.StrengthGainedLabel.Text = "Cantidad de fuerza ganadada en este server: " .. abbreviateNumber(strengthGained)
+        labels.DurabilityGainedLabel.Text = "Cantidad de dura ganada en este server: " .. abbreviateNumber(durabilityGained)
+        labels.AgilityGainedLabel.Text = "Cantidad de agilidad ganada en este server: " .. abbreviateNumber(agilityGained)
+        labels.KillsGainedLabel.Text = "Cantidad de kills ganadas en este server: " .. abbreviateNumber(killsGained)
+        labels.EvilKarmaGainedLabel.Text = "Cantidad de karma malo ganado en este server: " .. abbreviateNumber(evilKarmaGained)
+        labels.GoodKarmaGainedLabel.Text = "Cantidad de karma bueno ganado en este server: " .. abbreviateNumber(goodKarmaGained)
     end
 
     local function updateTimeSpent()
