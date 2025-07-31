@@ -1,13 +1,12 @@
 local Players = game:GetService("Players")
 local VirtualUser = game:GetService("VirtualUser")
 
---// JOGADOR LOCAL
+
 local Player = Players.LocalPlayer
 
---// CONFIGURAÇÃO: IDs PERMITIDOS
+
 local allowedUserIds = {2667228151, 4095731659, 1408914708, 2796344544, 7613083080, 7293740215, 5108572823, 3696490368, 4488303849, 1324424400, 1086868382, 2635475747, 2219273992, 1651313494, 7518436281, 5379634121, 2220474972, 5178782812, 1794232981, 8497330270, 5476915769, 8157514843, 2002271267, 8017975402, 2684795167, 5705258496, 7293740215, 5705258496, 7293740215, 7987137688, 3131191073, 7958547639, 4536137506, 2899338888, 7846593406, 5092801562, 1495204273, 7846593406, 7920908926} -- Substitua pelos IDs reais
 
---// VALIDAÇÃO DE ID
 local isAllowed = false
 for _, id in ipairs(allowedUserIds) do
     if Player.UserId == id then
@@ -22,7 +21,7 @@ if not isAllowed then
     return
 end
 
---// CONFIGURAÇÃO ANTI-AFK
+
 local function preventAFK()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
@@ -30,7 +29,7 @@ local function preventAFK()
     print("Anti-AFK: Prevented kick")
 end
 
---// CONEXÃO COM EVENTO 'Idled'
+
 Player.Idled:Connect(preventAFK)
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library/main/Library", true))()
@@ -38,7 +37,7 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memej
 -- Janela principal
 local window = library:AddWindow("Pheonix Hub V2", {
     main_color = Color3.fromRGB(139, 0, 0), -- Vermelho escuro
-    min_size = Vector2.new(530, 550),
+    min_size = Vector2.new(615, 550),
     can_resize = false,
 })
 
@@ -1682,10 +1681,14 @@ local switch = Rebirth:AddSwitch("Auto Size 2", function(state)
 end)
 
 local switch = Rebirth:AddSwitch("Hide All Frames", function(state)
-    if state then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Particulas/refs/heads/main/Particulas"))()
-    end
+    local rSto = game:GetService("ReplicatedStorage")
+		for _, obj in pairs(rSto:GetChildren()) do
+			if obj.Name:match("Frame$") then
+				obj.Visible = not state
+			end
+		end
 end)
+
 Rebirth:AddLabel("---Solo gente con 7-8 packs---")
 
 local switch = Rebirth:AddSwitch("Fast Rebirths", function(state)
@@ -2333,8 +2336,134 @@ Teleport:AddButton("Jungle Gym", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8137, 28, 2820)
 end)
 
-local Calculadora = window:AddTab("Calculadora")
-Calculadora:AddLabel("Herramienta en proceso")
+local Calculadora = window:AddTab("Calculadora", Color3.fromRGB(200, 100, 100))
+
+local baseStrength = 0
+local resultadoLabels = {}
+
+Calculadora:AddLabel("Pack Damage Calculator")
+
+Calculadora:AddTextBox("Fuerza Base (ej: 1.27Qa, T, B)", function(text)
+    local unidades = { ["T"] = 1e12, ["Q"] = 1e15, ["B"] = 1e9 }
+    text = text:upper()
+    for u, m in pairs(unidades) do
+        if text:find(u) then
+            local num = tonumber(text:match("(%d+%.?%d*)"))
+            if num then
+                baseStrength = num * m
+                return
+            end
+        end
+    end
+    baseStrength = tonumber(text:match("(%d+%.?%d*)")) or 0
+end)
+
+local mensajeLabel = Calculadora:AddLabel("") -- Label para mostrar errores
+
+-- Crear los 8 labels una vez, en orden fijo
+for i = 1, 8 do
+    resultadoLabels[i] = Calculadora:AddLabel(string.format("%d pack(s): -", i))
+end
+
+Calculadora:AddButton("Calcular", function()
+    if baseStrength <= 0 then
+        mensajeLabel.Text = "Ingresa un valor válido."
+        for i = 1, 8 do
+            resultadoLabels[i].Text = string.format("%d pack(s): -", i)
+        end
+        return
+    end
+
+    mensajeLabel.Text = ""
+
+    local danoAjustado = baseStrength * 0.10
+    local incremento = 0.335
+
+    for pack = 1, 8 do
+        local mult = 1 + (pack * incremento)
+        local valor = danoAjustado * mult
+
+        local disp
+        if valor >= 1e15 then
+            disp = string.format("%.3f Qa", valor / 1e15)
+        elseif valor >= 1e12 then
+            disp = string.format("%.2f T", valor / 1e12)
+        elseif valor >= 1e9 then
+            disp = string.format("%.2f B", valor / 1e9)
+        else
+            disp = tostring(math.floor(valor))
+        end
+
+        resultadoLabels[pack].Text = string.format("%d pack(s): %s", pack, disp)
+    end
+end)
+
+-- 📌 Pestaña Calculadora 2 integrada en el menú
+local Calculadora2 = window:AddTab("Calculadora 2", Color3.fromRGB(200, 100, 100))
+
+local baseDurabilidad = 0
+local resultadoLabels = {}
+local mensajeLabel = nil
+
+Calculadora2:AddLabel("Pack Durability Calculator")
+
+-- Campo de entrada para la durabilidad base
+Calculadora2:AddTextBox("Durabilidad base (ej: 1.27Qa, T, B)", function(text)
+    local unidades = { ["T"] = 1e12, ["Q"] = 1e15, ["B"] = 1e9 }
+    text = text:upper()
+    for u, m in pairs(unidades) do
+        if text:find(u) then
+            local num = tonumber(text:match("(%d+%.?%d*)"))
+            if num then
+                baseDurabilidad = num * m
+                return
+            end
+        end
+    end
+    baseDurabilidad = tonumber(text:match("(%d+%.?%d*)")) or 0
+end)
+
+-- Label para mensajes de error
+mensajeLabel = Calculadora2:AddLabel("")
+
+-- Crear una vez los labels para resultados (fijos en su lugar)
+for i = 1, 8 do
+    resultadoLabels[i] = Calculadora2:AddLabel(string.format("%d pack(s): -", i))
+end
+
+-- Botón para calcular
+Calculadora2:AddButton("Calcular", function()
+    if baseDurabilidad <= 0 then
+        mensajeLabel.Text = "Ingresa un valor válido."
+        for i = 1, 8 do
+            resultadoLabels[i].Text = string.format("%d pack(s): -", i)
+        end
+        return
+    end
+
+    mensajeLabel.Text = ""
+
+    local incremento = 0.335
+    local adicional = 1.5 -- Aumento del 50% como en tu script original
+
+    for pack = 1, 8 do
+        local mult = 1 + (pack * incremento)
+        local valor = baseDurabilidad * mult * adicional
+
+        local disp
+        if valor >= 1e15 then
+            disp = string.format("%.3f Qa", valor / 1e15)
+        elseif valor >= 1e12 then
+            disp = string.format("%.2f T", valor / 1e12)
+        elseif valor >= 1e9 then
+            disp = string.format("%.2f B", valor / 1e9)
+        else
+            disp = tostring(math.floor(valor))
+        end
+
+        resultadoLabels[pack].Text = string.format("%d pack(s): %s", pack, disp)
+    end
+end)
 
 local Credits = window:AddTab("Credits")
 
