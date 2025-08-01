@@ -1743,10 +1743,7 @@ local selectrock = ""
 
 local switch = Rock:AddSwitch("Auto Punch Jungle Rock (10M)", function(state)
     if state then
-        getgenv().AutoRock = true
-        print("⛏️ Auto Punch Jungle Rock ACTIVADO")
         loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Roca-10m/refs/heads/main/Roca%2010m"))()
-    else
     end
 end)
 
