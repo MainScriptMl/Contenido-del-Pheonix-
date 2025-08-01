@@ -1747,8 +1747,6 @@ local switch = Rock:AddSwitch("Auto Punch Jungle Rock (10M)", function(state)
         print("⛏️ Auto Punch Jungle Rock ACTIVADO")
         loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Roca-10m/refs/heads/main/Roca%2010m"))()
     else
-        getgenv().AutoRock = false
-        print("🛑 Auto Punch Jungle Rock DESACTIVADO")
     end
 end)
 
