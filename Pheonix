@@ -1810,7 +1810,7 @@ local labels = {
     KillsGainedLabel = Stats:AddLabel("Asesinatos ganados: 0"),
     EvilKarmaGainedLabel = Stats:AddLabel("Karma maligno ganado: 0"),
     GoodKarmaGainedLabel = Stats:AddLabel("Karma bueno ganado: 0"),
-    RebirthsGainedLabel = Stats:AddLabel("Rebirths ganados: 0") -- nuevo
+    RebirthsGainedLabel = Stats:AddLabel("Rebirths ganados: 0")
 }
 
 local function createMyLabels()
@@ -1826,7 +1826,7 @@ local function createMyLabels()
     local killsStat = leaderstats:WaitForChild("Kills")
     local evilKarmaStat = player:WaitForChild("evilKarma")
     local goodKarmaStat = player:WaitForChild("goodKarma")
-    local rebirthsStat = leaderstats:FindFirstChild("Rebirths") -- puede que no exista
+    local rebirthsStat = leaderstats:FindFirstChild("Rebirths")
 
     local initialStrength = strengthStat.Value or 0
     local initialDurability = durabilityStat.Value or 0
@@ -1852,9 +1852,22 @@ local function createMyLabels()
 
     local function updateTimeSpent()
         local timeSpent = tick() - startTime
-        local minutes = math.floor(timeSpent / 60)
+
+        local days = math.floor(timeSpent / 86400)
+        local hours = math.floor((timeSpent % 86400) / 3600)
+        local minutes = math.floor((timeSpent % 3600) / 60)
         local seconds = math.floor(timeSpent % 60)
-        labels.TimeSpentLabel.Text = string.format("Tiempo en el servidor: %02d:%02d", minutes, seconds)
+
+        local timeText = ""
+        if days > 0 then
+            timeText = timeText .. days .. "d "
+        end
+        if hours > 0 or days > 0 then
+            timeText = timeText .. string.format("%02dh ", hours)
+        end
+        timeText = timeText .. string.format("%02dm:%02ds", minutes, seconds)
+
+        labels.TimeSpentLabel.Text = "Tiempo en el servidor: " .. timeText
     end
 
     strengthStat.Changed:Connect(updateLabels)
