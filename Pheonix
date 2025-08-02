@@ -1743,9 +1743,8 @@ end)
 local Rock = Main:AddFolder("Rock Farm")
 
 getgenv().AutoRock = false
-local selectrock = ""
 
-local switch = Rock:AddSwitch("Auto Punch Jungle Rock (10M)", function(state)
+local switch = Rock:AddSwitch("Roca de la Jungla(10M)", function(state)
     if state then
         loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Roca-10m/refs/heads/main/Roca%2010m"))()
     end
