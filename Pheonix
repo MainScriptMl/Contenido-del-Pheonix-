@@ -1743,10 +1743,21 @@ end)
 local Rock = Main:AddFolder("Rock Farm")
 
 getgenv().AutoRock = false
+local rockScript -- Variable para guardar la función cargada
 
 local switch = Rock:AddSwitch("Roca de la Jungla(10M)", function(state)
     if state then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Roca-10m/refs/heads/main/Roca%2010m"))()
+        getgenv().AutoRock = true
+        -- Cargar el script y guardar la referencia de la función
+        rockScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/CTXxALEJANDROxX/Roca-10m/refs/heads/main/Roca%2010m"))()
+    else
+        getgenv().AutoRock = false
+        -- Intentar detener el script (si el script remoto tiene alguna lógica para eso, la necesitarías aquí)
+        if rockScript then
+            -- Si el script remoto tiene alguna función de detención, la llamarías aquí.
+            -- Ejemplo: rockScript:Stop() -- dependiendo de cómo esté diseñado el script.
+            rockScript = nil -- Reseteamos la referencia del script cargado
+        end
     end
 end)
 
